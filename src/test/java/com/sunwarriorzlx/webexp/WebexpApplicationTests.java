@@ -5,7 +5,12 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import com.sunwarriorzlx.webexp.dao.StudentDao;
 import com.sunwarriorzlx.webexp.entity.Student;
+import com.sunwarriorzlx.webexp.service.StudentService;
 
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
@@ -21,6 +26,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 class WebexpApplicationTests {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Resource
+    private StudentService studentService;
+    @Resource
+    private StudentDao studentDao;
 
     @Test
     void contextLoads() {
@@ -85,4 +94,15 @@ class WebexpApplicationTests {
         }
         return;
     }
+
+    @Test
+    public void studentService() {
+        // String pass = studentService.getPasswordByName("s201");
+        // String pass = studentDao.getPasswordByName("s201");
+        String userName = "s201";
+        String sql = "select PASSWORD from STUDENT where USERNAME = ?";
+        String pass = this.jdbcTemplate.queryForObject(sql, new Object[] { userName }, String.class);
+        return;
+    }
+
 }

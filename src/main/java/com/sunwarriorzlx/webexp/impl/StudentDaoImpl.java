@@ -46,10 +46,10 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public String getPasswordByName(String userName) {
-        String sql = "select PASSWORD from student where USERNAME = ?";
+        String sql = "select PASSWORD from STUDENT where USERNAME = ?";
         String pass;
         try {
-            pass = this.jdbcTemplate.queryForObject(sql, String.class, userName);
+            pass = this.jdbcTemplate.queryForObject(sql, new Object[] { userName }, String.class);
         } catch (DataAccessException e) {
             pass = null;
         }

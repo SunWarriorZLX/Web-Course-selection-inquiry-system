@@ -69,20 +69,17 @@
             },
             dataType: "JSON",
             success: (result) => {
-                if (result.data.code === 1) {
+                if (result.code === 1) {
                     // setCookie("token", result.data.token, 1);
-                    window.sessionStorage.setItem("session", result.data.token);
-                    alert("登录成功");
+                    window.sessionStorage.setItem("session", result.data);
+                    alert(result.msg);
+                    location.href = "mainPage.html";
                 }
                 else {
-                    alert(result.data.msg);
+                    alert(result.msg);
                     return false;
                 }
             },
-            complete: () => {
-                location.href = "mainPage.html";
-            }
-
         })
     }
 </script>
