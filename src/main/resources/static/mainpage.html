@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 必须的 meta 标签 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap 的 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Login</title>
+</head>
+
+<body>
+    <!-- Modal -->
+    <div class="modal-dialog modal-lg" style="margin-top: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">欢迎来到你的空间<p></p>
+                    <p>用户名：<span id="userName"></span></p>
+                    <p>密码：<span id="password"></span></p>
+                    <p>系统时间：<span id="sysTime"></span></p>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <h5>所选的课程是：</h5>
+                <div data-spy="scroll" class="scrolls" id="courseList"> 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="getCourse()">查看选课</button>
+                <button type="button" class="btn btn-danger" onclick="logout()">登出</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js.map"></script>
+</body>
+<script type="text/javascript">
+    var sys_time = document.getElementById("sysTime");
+    function showTime() {
+        var date = new Date();
+        var currentTime = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay() + ', ';
+        currentTime = currentTime + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        sys_time.innerHTML = currentTime;
+        window.setTimeout("showTime()", 1000);
+    }
+    function getUserInfo() {
+        $.ajax({
+            type: "GET",
+            url: "/homePage",
+            success: (result) => {
+                if (result.code === 1) {
+                    document.getElementById("userName").innerHTML = result.datas.userName;
+                    document.getElementById("password").innerHTML = result.datas.password;
+                }
+                else {
+                    alert(result.msg);
+                    location.href = "index.html";
+                }
+            }
+        })
+    }
+    function getCourse() {
+        $.ajax({
+            type: "GET",
+            url: "/getCourseList",
+            success: (result) => {
+                if (result.code === 1) {
+                    var courseList = "";
+                    for (var i in result.datas) {
+                        courseList = courseList + '<p>' + result.datas[i] + '</p>';
+                    }
+                    document.getElementById("courseList").innerHTML = courseList;
+                }
+                else {
+                    alert(result.msg);
+                    location.href = "index.html";
+                }
+            }
+        })
+    }
+
+    function logout() {
+        $.ajax({
+            type: "GET",
+            url: "/logout",
+            success: (result) => {
+                alert(result.msg);
+                location.href = "index.html";
+            }
+        })
+    }
+    showTime();
+    getUserInfo();
+</script>
+
+</html>

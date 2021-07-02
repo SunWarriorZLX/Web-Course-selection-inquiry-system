@@ -1,8 +1,8 @@
 package com.sunwarriorzlx.webexp.controller;
 
-import java.util.UUID;
-
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.sunwarriorzlx.webexp.service.StudentService;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Resource
     private StudentService studentService;
-    private UUID uuid;
 
     @PostMapping(value = "login")
-    public Result login(@RequestParam("name") String userName, @RequestParam("password") String password,
-            HttpSession httpSession) {
+    public Result<String> login(@RequestParam(value = "name", required = true) String userName,
+            @RequestParam(value = "password", required = true) String password, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
         Result<String> result = new Result<String>();
         String pass = studentService.getPasswordByName(userName);
         if (pass == null) {
@@ -35,10 +35,13 @@ public class LoginController {
             result.setMsg("密码错误");
             return result;
         }
+        HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.setAttribute("userName", userName);
+        // cookie = new Cookie("loginSESSION", httpSession.getId());
+        // cookie.setMaxAge(httpSession.getMaxInactiveInterval());
+        // httpServletResponse.addCookie(cookie);
         result.setCode(1);
         result.setMsg("登录成功");
-        result.setDatas(uuid.randomUUID().toString());
-        httpSession.setAttribute(result.getDatas(), System.currentTimeMillis());
         return result;
     }
 }
