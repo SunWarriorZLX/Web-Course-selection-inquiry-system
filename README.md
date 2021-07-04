@@ -8,7 +8,7 @@
 # 安装与使用
 运行此项目需要`mysql`和`redis`环境
 数据库配置完成后，在`mysql`中导入`database`文件夹下的`sql`脚本
-###修改配置文件`application.properties`
+### 修改配置文件`application.properties`
 ```properties
 # 数据库连接地址
 spring.datasource.url=
